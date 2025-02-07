@@ -37,7 +37,7 @@ Make sure you have UV installed on your system. https://docs.astral.sh/uv/gettin
 1. Clone the repository:
 
 ```sh
-git clone https://github.com/jtbaker/open-maps.git
+git clone git@github.com:jtbaker/open-maps.git
 cd open-maps
 uv sync
 # activate the virtual environment
