@@ -1,10 +1,10 @@
 #/bin/zsh
 
+# census bureau website was broken when i was doing this 🕵️
 # curl -L https://www2.census.gov/geo/tiger/GENZ2023/gdb/cb_2023_us_all_5m.zip
 # unzip cb_2023_us_all_5m.zip -d cb_2023_us_all_5m
-# census bureau website was broken when i was doing this 🕵️
 
-
+# but I found it on bigquery open data and did a dump to a bucket
 # gsutil -m cp 'gs://jtb-open-data/zcta-csv-*.gz' ./data
 # for file in ./data/*.gz; do
 #     # gunzip $file ./data/${file%.gz}.csv
@@ -29,4 +29,7 @@ EOF
 duckdb -c "$query"
 
 
-tippecanoe -o ./data/zcta/zcta.pmtiles --simplification 4 --no-tiny-polygon-reduction --maximum-tile-bytes 5000000 --limit-tile-feature-count 1006343 -Z 3 -zg ./data/zcta/zcta.geojson
+tippecanoe -o ./data/zcta/zcta.pmtiles --simplification 4 \
+    --no-tiny-polygon-reduction --maximum-tile-bytes 5000000 \
+    --limit-tile-feature-count 1006343 -Z 3 -zg \
+    ./data/zcta/zcta.geojson
