@@ -1,0 +1,5 @@
+{
+  "python.analysis.extraPaths": ["./app"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}

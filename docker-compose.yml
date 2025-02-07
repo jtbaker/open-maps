@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  # localstack:
+  #   image: localstack/localstack:latest
+  #   ports:
+  #     - "4566:4566"  # LocalStack Edge Port
+  #   environment:
+  #     - SERVICES=s3
+  #     - DEBUG=1
+  #     - LOCALSTACK_VOLUME_DIR=/var/lib/localstack
+  #     - PERSISTENCE=1
+  #     - DOCKER_HOST=unix:///var/run/docker.sock
+  #     - S3_SKIP_SIGNATURE_VALIDATION=1
+  #   volumes:
+  #     - "${PWD}/data:/var/lib/localstack"  # Mount local data directory
+  #     - "/var/run/docker.sock:/var/run/docker.sock"  # Docker socket for container communication
+  # create-bucket:
+  #   image: localstack/localstack:s3-latest
+  #   depends_on:
+  #     - localstack
+  #   command: awslocal s3 mb s3://my-local-bucket
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock"  # Docker socket for container communication
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=user
+      - MINIO_ROOT_PASSWORD=password
+      - MINIO_DEFAULT_BUCKETS=my-local-bucket
+    # volumes:
+    #   - "${PWD}/data:/data"
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  uploader:
+    image: minio/mc
+    container_name: uploader
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: [
+        "sh",
+        "-c",
+        "
+        sleep 10 && \
+        mc alias set myminio http://minio:9000 user password && \
+        mc mb myminio/pmtiles && \
+        mc cp /data/zcta/zcta.pmtiles myminio/pmtiles/zcta.pmtiles
+        ",
+      ]
+    volumes:
+      - ./data:/data
+networks:
+  default:
+    driver: bridge

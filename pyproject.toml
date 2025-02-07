@@ -1,0 +1,25 @@
+[project]
+name = "open-maps"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "aiopmtiles",
+    "boto3>=1.36.12",
+    "duckdb>=1.2.0",
+    "fastapi>=0.115.8",
+    "google-cloud-storage>=3.0.0",
+    "pmtiles>=3.4.1",
+    "tippecanoe>=2.72.0",
+    "uvicorn>=0.34.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "tippecanoe>=2.72.0",
+]
+
+[tool.uv.sources]
+aiopmtiles = { git = "http://github.com/developmentseed/aiopmtiles" }
