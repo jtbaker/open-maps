@@ -73,6 +73,7 @@ onMounted(() => {
           tiles: [
             "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
           ],
+          tileSize: 256
         },
         cartoPositron: {
           type: "raster",
@@ -136,7 +137,7 @@ onMounted(() => {
               "case",
               ["boolean", ["feature-state", "hover"], false],
               0.8,
-              0.7,
+              0.4,
             ],
           },
         },
@@ -209,6 +210,8 @@ onMounted(() => {
       rasterSaturation.value
     );
   });
+
+  // map.set
 
   map.on("mousemove", "zcta", (e) => {
     map.getCanvas().style.cursor = "pointer";
