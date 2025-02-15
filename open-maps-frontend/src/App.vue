@@ -66,7 +66,6 @@ onMounted(() => {
           type: "vector",
           promoteId: "zip_code",
           url: "http://localhost:8000/zcta/tilejson.json",
-          // tiles: ["http://localhost:8000/tiles/zcta/{z}/{x}/{y}.mvt"],
         },
         satellite: {
           type: "raster",
