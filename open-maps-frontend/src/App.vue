@@ -150,7 +150,7 @@ onMounted(() => {
             "line-color": [
               "case",
               ["boolean", ["feature-state", "hover"], false],
-              "darkgrey",
+              "black",
               "#007bff",
             ],
             "line-width": [

@@ -20,7 +20,7 @@ COPY (
     SELECT lpad(zip_code::text, 5, '0') zip_code, 
     * exclude (zip_code,zip_code_geom), 
     ST_GEOMFROMTEXT(zip_code_geom) geometry 
-    FROM read_csv('./data/zcta-csv-*.csv.gz')
+    FROM read_csv('./data/zcta/zcta-csv-*.csv.gz')
 ) 
     TO './data/zcta/zcta.geojson' WITH (FORMAT GDAL, DRIVER 'GeoJSON');
 EOF

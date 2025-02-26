@@ -57,36 +57,10 @@ async def download_pmtiles():
 def get_tilejson(
     request: Request, dataset: str = Path(..., description="Dataset name")
 ):
-    return get_tile_json("pmtiles", f"{dataset}", request)
     """
     Serve TileJSON metadata for the PMTiles archive.
     """
-    # async with Reader(
-    #     f"http://localhost:9000/pmtiles/{dataset}/{dataset}.pmtiles"
-    # ) as reader:
-    #     metadata = await reader.metadata()
-    #     # reader.
-    #     tilejson = {
-    #         "tilejson": "3.0.0",
-    #         "name": metadata.get("name", "PMTiles"),
-    #         "description": metadata.get("description", ""),
-    #         "version": metadata.get("version", "1.0.0"),
-    #         "attribution": metadata.get("attribution", ""),
-    #         "type": "vector" if reader.is_vector else "raster",
-    #         "format": "pbf" if reader.is_vector else "png",
-    #         "bounds": reader.bounds,
-    #         "minzoom": reader.minzoom,
-    #         "maxzoom": reader.maxzoom,
-    #         "tiles": [
-    #             str(
-    #                 request.url_for(
-    #                     "get_tile", dataset=f"{dataset}", z="{z}", x="{x}", y="{y}"
-    #                 )
-    #             )
-    #             # + f"?url={url}"
-    #         ],
-    #     }
-    #     return tilejson
+    return get_tile_json("pmtiles", f"{dataset}", request)
 
 
 @app.get("/tiles/{dataset}/{z}/{x}/{y}")
