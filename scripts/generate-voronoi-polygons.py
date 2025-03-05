@@ -158,7 +158,7 @@ subprocess.run(
     -l submarket \
     --no-tiny-polygon-reduction --maximum-tile-bytes 5000000 \
     --limit-tile-feature-count 1006343 -Z 0 -zg \
-    ./submarket.fgb
+    ./data/submarket.fgb
 """
 )
 
@@ -168,6 +168,6 @@ subprocess.run(
     -l market \
     --no-tiny-polygon-reduction --maximum-tile-bytes 5000000 \
     --limit-tile-feature-count 1006343 -Z 0 -zg \
-    ./market.fgb
+    ./data/market.fgb
 """
 )
