@@ -110,27 +110,36 @@ onMounted(() => {
           type: "fill",
           paint: {
             "fill-color": [
-              "interpolate",
-              ["linear"],
-              ["coalesce", ["get", "area_water_meters"], 0],
-              0,
-              "#C4A484", // Light brown/tan (dry earth)
-              500000,
-              "#8B8B5A", // Olive brown (semi-arid)
-              1000000,
-              "#567D46", // Muted green (light vegetation)
-              2000000,
-              "#4B7BE5", // Light blue (some water)
-              3000000,
-              "#3266D1", // Medium blue
-              4000000,
-              "#1E4CB5", // Deeper blue
-              5000000,
-              "#163C91", // Rich blue
-              10000000,
-              "#0F2D6D", // Dark blue
-              100000000,
-              "#081D49", // Very dark blue (abundant water)
+              "match",
+              ["get", "zip_code"],
+              ...["78749", "78739"].flatMap(v => [v, "blue"]),
+              // "78749",
+              // "blue",
+              // "78739",
+              // "red",
+              "grey", 
+              
+              // "interpolate",
+              // ["linear"],
+              // ["coalesce", ["get", "area_water_meters"], 0],
+              // 0,
+              // "#C4A484", // Light brown/tan (dry earth)
+              // 500000,
+              // "#8B8B5A", // Olive brown (semi-arid)
+              // 1000000,
+              // "#567D46", // Muted green (light vegetation)
+              // 2000000,
+              // "#4B7BE5", // Light blue (some water)
+              // 3000000,
+              // "#3266D1", // Medium blue
+              // 4000000,
+              // "#1E4CB5", // Deeper blue
+              // 5000000,
+              // "#163C91", // Rich blue
+              // 10000000,
+              // "#0F2D6D", // Dark blue
+              // 100000000,
+              // "#081D49", // Very dark blue (abundant water)
             ],
             "fill-opacity": [
               "case",
@@ -201,7 +210,7 @@ onMounted(() => {
   })
 
   watchEffect(() => {
-    console.log("firing", rasterSaturation.value);
+    // console.log("firing", rasterSaturation.value);
     if (!map?.isStyleLoaded()) return;
     map?.setPaintProperty(
       "satellite",
@@ -215,14 +224,15 @@ onMounted(() => {
   map.on("mousemove", "zcta", (e) => {
     map.getCanvas().style.cursor = "pointer";
     const feature = e.features[0];
+    debugger
     const { properties, id } = feature;
-    console.log(properties);
+    // console.log(properties);
     if (id != hoverFeatureId.value) {
       map?.removeFeatureState({ source: "zcta", sourceLayer: "zcta" });
     }
     hoverFeatureId.value = id;
 
-    console.log({ hoverFeatureId: id });
+    // console.log({ hoverFeatureId: id });
     map?.setFeatureState(
       { source: "zcta", sourceLayer: "zcta", id: hoverFeatureId.value },
       { hover: true }
@@ -242,8 +252,13 @@ onMounted(() => {
     // map.getCanvas().style.cursor = "pointer";
     popup?.setLngLat(e.lngLat);
     const feature = e.features[0];
-    const { properties, id } = feature;
-    console.log(properties);
+    const { properties, id, geometry } = feature;
+    const nearbyFeatures = map?.queryRenderedFeatures([[e.point.x - 100, e.point.y - 100], [e.point.x + 100, e.point.y + 100]], { layers: ["zcta"] })
+    const nearbyZips: string[] = nearbyFeatures?.map(v => v.properties.zip_code);
+    map?.setFilter("zcta", ["in", ["get", "zip_code"], ["literal", nearbyZips]])
+    map?.setFilter("zcta-line", ["in", ["get", "zip_code"], ["literal", nearbyZips]])
+    console.log({ nearbyFeatures })
+    // console.log(properties);
     hoverFeatureId.value = id;
     popup?.setHTML(`<div><span>Postal Code: </span><span>${properties.zip_code}</span></div>`)
     popup?.addTo(map)

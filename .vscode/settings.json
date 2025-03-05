@@ -1,5 +1,9 @@
 {
   "python.analysis.extraPaths": ["./app"],
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "cSpell.enabled": false,
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools"
+  }
 }
