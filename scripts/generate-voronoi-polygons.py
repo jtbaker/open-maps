@@ -131,21 +131,33 @@ dissolve_query = """
         JOIN markets_long m ON v.zip_code = m.postal_code
     WHERE type = 'market';
     COPY (
-        SELECT ST_MAKEVALID(ST_BUFFER(ST_UNION_AGG(geom), 0)) geometry,
+        SELECT ST_MAKEVALID(ST_BUFFER(ST_BUFFER(ST_UNION_AGG(geom), 0.000001), -0.000001)) geometry,
             code,
             type
         FROM voronoi_with_submarket_info
         GROUP BY code,
             type
-    ) TO './submarket.fgb' WITH (FORMAT GDAL, DRIVER 'FlatGeoBuf');
+    ) TO './data/submarket.fgb' WITH (FORMAT GDAL, DRIVER 'FlatGeoBuf');
+
     COPY (
-        SELECT ST_MAKEVALID(ST_BUFFER(ST_UNION_AGG(geom), 0)) geometry,
+        SELECT * 
+        FROM ST_READ('./data/submarket.fgb')
+    )  TO './data/submarket.geojson' WITH (FORMAT GDAL, DRIVER 'GeoJSON');
+
+    COPY (
+        SELECT ST_MAKEVALID(ST_BUFFER(ST_BUFFER(ST_UNION_AGG(geom), 0.000001), -0.000001)) geometry,
             code,
             type
         FROM voronoi_with_market_info
         GROUP BY code,
             type
-    ) TO './market.fgb' WITH (FORMAT GDAL, DRIVER 'FlatGeoBuf');
+    ) TO './data/market.fgb' WITH (FORMAT GDAL, DRIVER 'FlatGeoBuf');
+
+    COPY (
+        SELECT * 
+        FROM ST_READ('./data/market.fgb')
+    )  TO './data/market.geojson' WITH (FORMAT GDAL, DRIVER 'GeoJSON');
+
 
 """
 
